@@ -1,0 +1,21 @@
+{
+    "scenario_name": "counter_failure",
+    "description": "2 counters fail at 10:00, leading to a capacity drop and queue buildup.",
+    "events": [
+        {
+            "timestamp": "2026-08-30T09:00:00",
+            "event_type": "CENTRE_OPENED",
+            "metadata": {"centre_id": "c1", "total_counters": 4, "rate_per_counter": 10.0}
+        },
+        {
+            "timestamp": "2026-08-30T10:00:00",
+            "event_type": "COUNTER_UNAVAILABLE",
+            "metadata": {"centre_id": "c1", "counter_id": "cnt_1"}
+        },
+        {
+            "timestamp": "2026-08-30T10:00:01",
+            "event_type": "COUNTER_UNAVAILABLE",
+            "metadata": {"centre_id": "c1", "counter_id": "cnt_2"}
+        }
+    ]
+}

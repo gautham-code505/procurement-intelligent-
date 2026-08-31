@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Procurement Intelligence</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- TOP NAVIGATION -->
+        <header class="top-nav">
+            <div class="logo">
+                <span class="logo-icon"></span>
+                <h1>Adaptive Procurement Intelligence</h1>
+            </div>
+            
+            <div class="demo-controls">
+                <div class="demo-status" id="demo-status-indicator">STEP 0: IDLE</div>
+                <button id="btn-demo-start" class="btn-primary">START DEMO (ADMIN)</button>
+                <button id="btn-demo-reset" class="btn-secondary">RESET (ADMIN)</button>
+            </div>
+            
+            <div class="role-selector">
+                <label for="role-select">Current Role:</label>
+                <select id="role-select">
+                    <option value="ADMIN">ADMIN</option>
+                    <option value="OPERATOR">OPERATOR</option>
+                    <option value="FARMER">FARMER</option>
+                </select>
+            </div>
+        </header>
+
+        <!-- MAIN LAYOUT -->
+        <main class="main-content">
+            <!-- TABS -->
+            <div class="tabs">
+                <button class="tab-btn active" data-target="operator-dashboard">Command Centre</button>
+                <button class="tab-btn" data-target="farmer-portal">Farmer Portal</button>
+            </div>
+
+            <!-- OPERATOR DASHBOARD -->
+            <section id="operator-dashboard" class="tab-content active">
+                <!-- TOP STRIP -->
+                <div class="status-strip">
+                    <div class="stat-card">
+                        <div class="stat-label">Active Counters</div>
+                        <div class="stat-value" id="stat-counters">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Effective Capacity</div>
+                        <div class="stat-value" id="stat-capacity">-- /hr</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Current Queue</div>
+                        <div class="stat-value" id="stat-queue">--</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Congestion Level</div>
+                        <div class="stat-value congestion-badge" id="stat-congestion">--</div>
+                    </div>
+                </div>
+
+                <!-- MAIN GRIDS -->
+                <div class="dashboard-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="col-left">
+                        <!-- COUNTERS -->
+                        <div class="panel">
+                            <h2>Operational Counters</h2>
+                            <div class="counters-grid" id="counters-container">
+                                <!-- Counters injected here -->
+                            </div>
+                        </div>
+
+                        <!-- EVENT TIMELINE -->
+                        <div class="panel timeline-panel">
+                            <h2>Event Timeline</h2>
+                            <div class="timeline" id="event-timeline">
+                                <!-- Timeline items injected here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="col-right">
+                        <!-- PREDICTION GRAPH (Simulated via CSS/HTML for prototype) -->
+                        <div class="panel prediction-panel">
+                            <h2>Prediction Horizon (Next 2 Hours)</h2>
+                            <div class="graph-container">
+                                <!-- A visual representation of the prediction time points -->
+                                <div class="queue-graph" id="queue-graph"></div>
+                                <div class="graph-axes">
+                                    <span id="graph-time-start">Now</span>
+                                    <span id="graph-time-end">+2h</span>
+                                </div>
+                            </div>
+                            <div class="prediction-stats">
+                                <div>Peak Queue: <span id="pred-peak-queue">--</span></div>
+                                <div>Max Wait: <span id="pred-peak-wait">--</span></div>
+                            </div>
+                        </div>
+
+                        <!-- IMPACT PANEL (Before / After) -->
+                        <div class="panel impact-panel">
+                            <h2>Intervention Impact</h2>
+                            <div class="impact-grid">
+                                <div class="impact-box disrupted">
+                                    <h3>DISRUPTED</h3>
+                                    <p>Peak Queue: <span id="impact-disrupted-queue">--</span></p>
+                                    <p>Max Wait: <span id="impact-disrupted-wait">--</span></p>
+                                </div>
+                                <div class="impact-divider">➔</div>
+                                <div class="impact-box recovered">
+                                    <h3>RECOVERED</h3>
+                                    <p>Peak Queue: <span id="impact-recovered-queue">--</span></p>
+                                    <p>Max Wait: <span id="impact-recovered-wait">--</span></p>
+                                </div>
+                            </div>
+                            <div class="impact-delta" id="impact-delta">
+                                <!-- Deltas rendered here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FARMER PORTAL -->
+            <section id="farmer-portal" class="tab-content">
+                <div class="panel farmer-panel">
+                    <h2>Farmer Booking Status</h2>
+                    <div class="farmer-search">
+                        <input type="text" id="farmer-id-input" placeholder="Enter Farmer ID (e.g. farmer_3_0)" value="farmer_3_0">
+                        <button id="btn-fetch-farmer" class="btn-primary">View Booking</button>
+                    </div>
+
+                    <div id="farmer-booking-details" class="farmer-details hidden">
+                        <!-- Live Booking Data -->
+                        <div class="booking-card live-data">
+                            <h3>Live Booking Data</h3>
+                            <div class="detail-row"><span>Booking ID:</span> <span id="fb-id"></span></div>
+                            <div class="detail-row"><span>Status:</span> <span id="fb-state" class="badge"></span></div>
+                            <div class="detail-row"><span>Scheduled Slot:</span> <span id="fb-slot"></span></div>
+                            <div class="detail-row"><span>Reschedule Count:</span> <span id="fb-reschedules"></span></div>
+                            <div class="detail-row"><span>Procurement:</span> <span id="fb-procurement"></span></div>
+                            <div class="detail-row"><span>Payment:</span> <span id="fb-payment"></span></div>
+                        </div>
+
+                        <!-- Intervention History -->
+                        <div class="booking-card historical-data hidden" id="farmer-intervention-history">
+                            <h3>Intervention History</h3>
+                            <p class="history-note">This booking was rescheduled due to operational constraints.</p>
+                            <div class="detail-row"><span>Original Slot:</span> <span id="fb-original-slot" class="strikethrough"></span></div>
+                            <div class="detail-row"><span>Action Taken:</span> <span>System intervened to prevent excessive wait time.</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- RECOMMENDATION MODAL -->
+    <div id="recommendation-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>Intelligence Intervention Required</h2>
+                <span class="badge warning">PENDING APPROVAL</span>
+            </div>
+            <div class="modal-body">
+                <div class="rec-summary">
+                    <p><strong>Reason:</strong> <span id="rec-reason"></span></p>
+                    <p><strong>Expected Impact:</strong> <span id="rec-impact"></span></p>
+                </div>
+                
+                <div class="rec-constraints">
+                    <div class="constraint-box">
+                        <h4>Constraint Check</h4>
+                        <pre id="rec-constraint-check"></pre>
+                    </div>
+                    <div class="constraint-box">
+                        <h4>Fairness Check</h4>
+                        <pre id="rec-fairness-check"></pre>
+                    </div>
+                </div>
+
+                <div class="rec-changes">
+                    <h4>Affected Bookings (<span id="rec-changes-count">0</span>)</h4>
+                    <div class="table-container">
+                        <table id="rec-changes-table">
+                            <thead>
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Original Slot</th>
+                                    <th>Proposed Slot</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-reject-rec" class="btn-secondary">Reject</button>
+                <button id="btn-approve-rec" class="btn-primary success">Approve Intervention</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATIONS -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- SCRIPTS -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
